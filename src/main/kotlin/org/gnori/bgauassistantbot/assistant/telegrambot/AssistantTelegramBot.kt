@@ -16,6 +16,8 @@ final class AssistantTelegramBot(
 
     companion object : KLogging()
 
+    override val name: String = "assistant"
+
     override fun startConsuming() {
         telegramBot(token)
             .startGettingOfUpdatesByLongPolling(updatesReceiver = this::consume)
