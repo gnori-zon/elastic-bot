@@ -1,3 +1,7 @@
 spring:
   application:
     name: bgau-assistant-bot
+
+telegram:
+  assistant:
+    token: <token>
