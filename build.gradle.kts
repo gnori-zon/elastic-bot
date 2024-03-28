@@ -27,6 +27,9 @@ dependencies {
     implementation("dev.inmo:tgbotapi:11.0.0")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
+    implementation("org.springframework.data:spring-data-r2dbc")
+    implementation("io.r2dbc:r2dbc-postgresql")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 }
