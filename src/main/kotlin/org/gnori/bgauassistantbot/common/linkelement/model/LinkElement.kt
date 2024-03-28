@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.linkelement
+package org.gnori.bgauassistantbot.common.linkelement.model
 
 interface LinkElement {
     val id: String

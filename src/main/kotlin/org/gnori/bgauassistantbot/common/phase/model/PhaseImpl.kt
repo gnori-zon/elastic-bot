@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.phase
+package org.gnori.bgauassistantbot.common.phase.model
 
 data class PhaseImpl<T : PhaseContent>(
     override val id: String,

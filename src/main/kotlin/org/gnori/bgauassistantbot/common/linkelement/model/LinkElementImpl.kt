@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.linkelement
+package org.gnori.bgauassistantbot.common.linkelement.model
 
 data class LinkElementImpl(
     override val id: String,

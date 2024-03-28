@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.phase
+package org.gnori.bgauassistantbot.common.phase.model
 
 interface Phase<T: PhaseContent>: PhaseContent {
     val id: String

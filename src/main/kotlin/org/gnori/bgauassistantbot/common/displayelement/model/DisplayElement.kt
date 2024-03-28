@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.displayelement
+package org.gnori.bgauassistantbot.common.displayelement.model
 
 interface DisplayElement {
     val id: String

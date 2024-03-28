@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.common.model.displayelement
+package org.gnori.bgauassistantbot.common.displayelement.model
 
 data class DisplayElementImpl(
     override val id: String,

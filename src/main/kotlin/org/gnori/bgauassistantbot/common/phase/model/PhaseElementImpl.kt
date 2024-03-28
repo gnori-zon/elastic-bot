@@ -1,7 +1,7 @@
-package org.gnori.bgauassistantbot.common.model.phase
+package org.gnori.bgauassistantbot.common.phase.model
 
-import org.gnori.bgauassistantbot.common.model.displayelement.DisplayElement
-import org.gnori.bgauassistantbot.common.model.linkelement.LinkElement
+import org.gnori.bgauassistantbot.common.displayelement.model.DisplayElement
+import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
 
 data class PhaseElementImpl(
     override val id: String,
