@@ -2,6 +2,17 @@ spring:
   application:
     name: bgau-assistant-bot
 
+  r2dbc:
+    url: r2dbc:postgresql://<url>
+    username: <username>
+    password: <password>
+
+  liquibase:
+    enabled: true
+    url: jdbc:postgresql://<url>
+    user: <user>
+    password: <password>
+
 telegram:
   assistant:
     token: <token>
