@@ -1,8 +1,11 @@
 package org.gnori.bgauassistantbot.common.phase.model
 
-interface Phase<T: PhaseContent>: PhaseContent {
+import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
+
+interface Phase {
     val id: String
     val name: String
     val description: String
-    val phaseContents: List<T>
+    val childNames: List<String>
+    val linkElements: List<LinkElement>
 }

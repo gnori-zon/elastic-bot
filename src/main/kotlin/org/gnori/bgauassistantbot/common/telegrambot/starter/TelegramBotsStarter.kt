@@ -1,12 +1,12 @@
 package org.gnori.bgauassistantbot.common.telegrambot.starter
 
 import mu.KLogging
-import org.gnori.bgauassistantbot.common.telegrambot.TelegramBot
+import org.gnori.bgauassistantbot.common.telegrambot.consumer.TelegramBotConsumer
 import org.springframework.stereotype.Component
 
 @Component
 final class TelegramBotsStarter(
-    bots: List<TelegramBot>
+    bots: List<TelegramBotConsumer>
 ) {
 
     companion object : KLogging()
