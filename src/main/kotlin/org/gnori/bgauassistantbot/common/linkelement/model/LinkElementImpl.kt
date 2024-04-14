@@ -5,4 +5,4 @@ data class LinkElementImpl(
     override val name: String,
     override val link: String,
     override val type: LinkElementType
-): LinkElement
+) : LinkElement
