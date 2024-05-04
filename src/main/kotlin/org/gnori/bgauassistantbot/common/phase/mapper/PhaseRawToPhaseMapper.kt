@@ -13,6 +13,7 @@ class PhaseRawToPhaseMapper : Mapper<PhaseRaw, Phase> {
             id = param.entity.id.toString(),
             name = param.entity.name,
             description = param.entity.description,
+            shortId = param.entity.shortId,
             childNames = param.childNames,
             linkElements = param.linkElements,
         )

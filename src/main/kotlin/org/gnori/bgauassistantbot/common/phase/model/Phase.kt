@@ -6,6 +6,7 @@ interface Phase {
     val id: String
     val name: String
     val description: String
+    val shortId: Long
     val childNames: List<String>
     val linkElements: List<LinkElement>
 }

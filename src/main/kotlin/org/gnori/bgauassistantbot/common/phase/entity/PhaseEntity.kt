@@ -9,5 +9,6 @@ class PhaseEntity(
     @Id val id: UUID,
     val name: String,
     val description: String,
+    val shortId: Long,
     val parentId: UUID?
 )
