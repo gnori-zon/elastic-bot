@@ -1,4 +1,4 @@
-package org.gnori.bgauassistantbot.assistant.telegrambot.sender.model
+package org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model
 
 class SendText(
     val chatId: Long,

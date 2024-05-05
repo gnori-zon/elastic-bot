@@ -1,5 +1,7 @@
-package org.gnori.bgauassistantbot.assistant.telegrambot.sender
+package org.gnori.bgauassistantbot.assistant.telegrambot.message.sender
 
+import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.extensions.api.deleteMessage
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.RawChatId
@@ -7,16 +9,17 @@ import dev.inmo.tgbotapi.types.message.HTMLParseMode
 import dev.inmo.tgbotapi.types.message.MarkdownParseMode
 import kotlinx.coroutines.runBlocking
 import org.gnori.bgauassistantbot.assistant.telegrambot.AssistantTelegramBotData
-import org.gnori.bgauassistantbot.assistant.telegrambot.sender.model.ParseMode
-import org.gnori.bgauassistantbot.assistant.telegrambot.sender.model.SendText
-import org.gnori.bgauassistantbot.common.telegrambot.sender.TelegramBotSender
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.ParseMode
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.SendText
+import org.gnori.bgauassistantbot.common.telegrambot.message.sender.TelegramBotMessageSender
 import org.springframework.stereotype.Component
 
 @Component
-class AssistantTelegramBotSender(
-    private val botData: AssistantTelegramBotData
-): TelegramBotSender<SendText> {
+class AssistantTelegramBotMessageSender(
+    botData: AssistantTelegramBotData
+): TelegramBotMessageSender<SendText> {
 
+    private val telegramBot: TelegramBot = botData.telegramBot
 
     override fun send(params: SendText): Long = runBlocking {
 
@@ -27,7 +30,7 @@ class AssistantTelegramBotSender(
             ParseMode.NULL -> null
         }
 
-        botData.telegramBot.sendMessage(
+        telegramBot.sendMessage(
             chatId = chatId,
             text = params.text,
             parseMode = parseMode

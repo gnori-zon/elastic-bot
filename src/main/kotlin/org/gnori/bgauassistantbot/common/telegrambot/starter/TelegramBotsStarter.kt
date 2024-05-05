@@ -1,7 +1,7 @@
 package org.gnori.bgauassistantbot.common.telegrambot.starter
 
 import mu.KLogging
-import org.gnori.bgauassistantbot.common.telegrambot.consumer.TelegramBotConsumer
+import org.gnori.bgauassistantbot.common.telegrambot.update.consumer.TelegramBotConsumer
 import org.springframework.stereotype.Component
 
 @Component
