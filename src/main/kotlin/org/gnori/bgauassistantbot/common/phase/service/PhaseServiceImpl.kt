@@ -19,24 +19,32 @@ class PhaseServiceImpl(
 ) : PhaseService {
 
 
-    override fun findByName(name: String): Mono<Phase> =
-        repository.findByName(name)
+    override fun findByShortId(id: Int): Mono<Phase> =
+        repository.findByShortId(id)
+            .flatMap(this::findComponentsAndMap)
+
+    override fun findFirstPhase(): Mono<Phase> =
+        repository.findByParentIdIsNull()
+            .flatMap(this::findComponentsAndMap)
+
+    override fun findParentByShortId(id: Int): Mono<Phase> =
+        repository.findByParentByShortId(id)
             .flatMap(this::findComponentsAndMap)
 
     private fun findComponentsAndMap(entity: PhaseEntity): Mono<Phase> =
         Mono.zip(
-            this.findChildNamesById(entity.id),
+            this.findChildNamesAndShortIdsById(entity.id),
             this.findLinkElementsById(entity.id),
             ::Pair
         )
-            .map { (childNames, linkElements) ->
-                PhaseRaw(entity, childNames, linkElements)
+            .map { (childNamesWithShortIds, linkElements) ->
+                PhaseRaw(entity, childNamesWithShortIds, linkElements)
             }
             .map(mapper::map)
 
-    private fun findChildNamesById(phaseId: UUID): Mono<List<String>> =
+    private fun findChildNamesAndShortIdsById(phaseId: UUID): Mono<List<Pair<String, Int>>> =
         repository.findByParentId(phaseId)
-            .map { it.name }
+            .map { Pair(it.name, it.shortId) }
             .collectList()
 
     private fun findLinkElementsById(phaseId: UUID): Mono<List<LinkElement>> =

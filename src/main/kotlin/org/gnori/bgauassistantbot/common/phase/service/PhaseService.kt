@@ -4,5 +4,7 @@ import org.gnori.bgauassistantbot.common.phase.model.Phase
 import reactor.core.publisher.Mono
 
 interface PhaseService {
-    fun findByName(name: String): Mono<Phase>
+    fun findByShortId(id: Int): Mono<Phase>
+    fun findFirstPhase(): Mono<Phase>
+    fun findParentByShortId(id: Int): Mono<Phase>
 }

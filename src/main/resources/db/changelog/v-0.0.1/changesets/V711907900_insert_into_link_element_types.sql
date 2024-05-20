@@ -5,5 +5,5 @@ INSERT INTO link_element_types (name)
     VALUES
         ('DOCUMENT'),
         ('PHOTO'),
-        ('GIF'),
+        ('VIDEO'),
         ('URL')

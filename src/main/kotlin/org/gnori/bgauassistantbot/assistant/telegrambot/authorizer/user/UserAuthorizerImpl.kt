@@ -13,7 +13,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 class UserAuthorizerImpl(
     private val userService: UserService,
     private val userAuthorizeParamToCreateUserMapper: UserAuthorizeParamToCreateUserParamMapper
-) : UserAuthorizer {
+) : UserAuthorizer<UserAuthorizeParam> {
 
     override fun authorize(param: UserAuthorizeParam): Mono<User> =
         userService.findByChatId(param.chatId)

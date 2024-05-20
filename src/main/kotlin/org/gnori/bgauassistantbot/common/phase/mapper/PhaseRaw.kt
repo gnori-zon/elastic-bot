@@ -5,6 +5,6 @@ import org.gnori.bgauassistantbot.common.phase.entity.PhaseEntity
 
 class PhaseRaw(
     val entity: PhaseEntity,
-    val childNames: List<String> = emptyList(),
+    val childNamesWithShortIds: List<Pair<String, Int>> = emptyList(),
     val linkElements: List<LinkElement> = emptyList()
 )

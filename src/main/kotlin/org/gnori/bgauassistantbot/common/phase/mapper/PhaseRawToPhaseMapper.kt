@@ -14,7 +14,7 @@ class PhaseRawToPhaseMapper : Mapper<PhaseRaw, Phase> {
             name = param.entity.name,
             description = param.entity.description,
             shortId = param.entity.shortId,
-            childNames = param.childNames,
+            childNamesWithShortIds = param.childNamesWithShortIds,
             linkElements = param.linkElements,
         )
 }

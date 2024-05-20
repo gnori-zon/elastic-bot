@@ -21,6 +21,8 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     
