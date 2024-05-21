@@ -12,6 +12,7 @@ class PhaseRawToPhaseMapper : Mapper<PhaseRaw, Phase> {
         PhaseImpl(
             id = param.entity.id.toString(),
             name = param.entity.name,
+            headerLinkElement = param.headerLinkElement,
             description = param.entity.description,
             shortId = param.entity.shortId,
             childNamesWithShortIds = param.childNamesWithShortIds,

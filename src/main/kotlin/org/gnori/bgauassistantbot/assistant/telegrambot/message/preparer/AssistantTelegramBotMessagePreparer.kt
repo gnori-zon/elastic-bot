@@ -9,8 +9,8 @@ import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import dev.inmo.tgbotapi.utils.matrix
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.preparer.model.MessageRaw
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Message
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.ParseMode
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.*
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.sending.Message
 import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
 import org.gnori.bgauassistantbot.common.linkelement.model.LinkElementType
 import org.gnori.bgauassistantbot.common.phase.model.Phase
@@ -38,6 +38,7 @@ class AssistantTelegramBotMessagePreparer(
                     .map { notNullShortId ->
                         val previousParentShortId = if (notNullShortId != -1) notNullShortId else null
                         // todo: split to monos -> and parallel
+                        val headerMedia = createHeaderMedia(phase.headerLinkElement)
                         val keyboardMarkup = createKeyboardMarkup(phase, previousParentShortId)
                         val photos = createPhotos(phase.linkElements)
                         val videos = createVideos(phase.linkElements)
@@ -46,6 +47,7 @@ class AssistantTelegramBotMessagePreparer(
                         Message(
                             param.chatId,
                             phase.description,
+                            headerMedia,
                             ParseMode.NULL,
                             keyboardMarkup,
                             photos,
@@ -61,6 +63,20 @@ class AssistantTelegramBotMessagePreparer(
         phaseShortId
             ?.let(phaseService::findByShortId)
             ?: phaseService.findFirstPhase()
+
+    private fun createHeaderMedia(headerLinkElement: LinkElement?): Media? {
+
+        return headerLinkElement?.let {
+            loadBy(headerLinkElement.name, headerLinkElement.link)
+        }?.let {
+            when(headerLinkElement.type) {
+                LinkElementType.PHOTO -> Photo(InputFile(it))
+                LinkElementType.VIDEO -> Video(InputFile(it))
+                LinkElementType.DOCUMENT -> Document(InputFile(it))
+                else -> throw IllegalStateException("not supported type" + headerLinkElement.type)
+            }
+        }
+    }
 
     private fun createKeyboardMarkup(phase: Phase, parentShortId: Int?): KeyboardMarkup {
         val nextPhaseInlineKeyboardButtons = createCallbackDataInlineKeyboardButtons(phase.childNamesWithShortIds)

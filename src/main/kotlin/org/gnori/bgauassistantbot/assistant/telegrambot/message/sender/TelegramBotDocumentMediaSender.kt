@@ -6,7 +6,7 @@ import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.RawChatId
 import kotlinx.coroutines.reactor.mono
 import org.gnori.bgauassistantbot.assistant.telegrambot.AssistantTelegramBotData
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.DocumentMedia
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.sending.DocumentMediaGroup
 import org.gnori.bgauassistantbot.common.telegrambot.message.sender.TelegramBotMessageSender
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
@@ -14,12 +14,12 @@ import reactor.core.publisher.Mono
 @Component
 class TelegramBotDocumentMediaSender(
     botData: AssistantTelegramBotData
-) : TelegramBotMessageSender<DocumentMedia> {
+) : TelegramBotMessageSender<DocumentMediaGroup> {
 
     private val maxSizeGroupDocumentMedia = 10
     private val telegramBot = botData.telegramBot
 
-    override fun send(params: DocumentMedia): Mono<Boolean> {
+    override fun send(params: DocumentMediaGroup): Mono<Boolean> {
 
         val chatId = ChatId(RawChatId(params.chatId))
 
@@ -36,7 +36,7 @@ class TelegramBotDocumentMediaSender(
                     }
 
                     params.documents.size == 1 ->
-                        telegramBot.sendDocument(chatId = chatId, document = params.documents[0])
+                        telegramBot.sendDocument(chatId = chatId, document = params.documents[0].file)
                             .let { true }
 
                     else -> false

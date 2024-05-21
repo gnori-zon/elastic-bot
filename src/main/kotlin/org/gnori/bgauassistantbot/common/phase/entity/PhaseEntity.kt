@@ -8,6 +8,7 @@ import java.util.*
 class PhaseEntity(
     @Id val id: UUID,
     val name: String,
+    val headerLinkElementId: UUID?,
     val description: String,
     val shortId: Int,
     val parentId: UUID?

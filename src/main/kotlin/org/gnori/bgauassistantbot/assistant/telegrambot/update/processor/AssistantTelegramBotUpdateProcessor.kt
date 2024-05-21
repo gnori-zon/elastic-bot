@@ -8,10 +8,9 @@ import dev.inmo.tgbotapi.extensions.utils.extensions.sourceUser
 import dev.inmo.tgbotapi.types.update.abstracts.Update
 import org.gnori.bgauassistantbot.common.telegrambot.authorizer.user.UserAuthorizer
 import org.gnori.bgauassistantbot.assistant.telegrambot.authorizer.user.model.UserAuthorizeParam
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.deleter.AssistantTelegramBotMessageDeleter
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.deleter.model.DeleteMessageParam
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.preparer.model.MessageRaw
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Message
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.sending.Message
 import org.gnori.bgauassistantbot.common.telegrambot.message.deleter.TelegramBotMessageDeleter
 import org.gnori.bgauassistantbot.common.telegrambot.message.preparer.TelegramBotMessagePreparer
 import org.gnori.bgauassistantbot.common.telegrambot.message.sender.TelegramBotMessageSender

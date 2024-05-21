@@ -8,20 +8,20 @@ import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.RawChatId
 import kotlinx.coroutines.reactor.mono
 import org.gnori.bgauassistantbot.assistant.telegrambot.AssistantTelegramBotData
-import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.VisualMedia
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.sending.VisualMediaGroup
 import org.gnori.bgauassistantbot.common.telegrambot.message.sender.TelegramBotMessageSender
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
 @Component
-class TelegramBotVisualMediaSender(
+class TelegramBotVisualMediaGroupSender(
     botData: AssistantTelegramBotData
-) : TelegramBotMessageSender<VisualMedia> {
+) : TelegramBotMessageSender<VisualMediaGroup> {
 
     private val maxSizeGroupVisualMedia = 10
     private val telegramBot: TelegramBot = botData.telegramBot
 
-    override fun send(params: VisualMedia): Mono<Boolean> {
+    override fun send(params: VisualMediaGroup): Mono<Boolean> {
 
         val chatId = ChatId(RawChatId(params.chatId))
 
@@ -38,11 +38,11 @@ class TelegramBotVisualMediaSender(
                     }
 
                     params.photos.size == 1 ->
-                        telegramBot.sendPhoto(chatId = chatId, fileId = params.photos[0])
+                        telegramBot.sendPhoto(chatId = chatId, fileId = params.photos[0].file)
                             .let { true }
 
                     params.videos.size == 1 ->
-                        telegramBot.sendVideo(chatId = chatId, video = params.videos[0])
+                        telegramBot.sendVideo(chatId = chatId, video = params.videos[0].file)
                             .let { true }
 
                     else -> false

@@ -5,6 +5,7 @@ import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
 interface Phase {
     val id: String
     val name: String
+    val headerLinkElement: LinkElement?
     val description: String
     val shortId: Int
     val childNamesWithShortIds: List<Pair<String, Int>>

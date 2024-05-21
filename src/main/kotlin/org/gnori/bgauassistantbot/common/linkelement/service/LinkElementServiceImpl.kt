@@ -25,4 +25,9 @@ class LinkElementServiceImpl(
         linkElementTypeService.findById(entity.typeId.toString())
             .map { type -> LinkElementRaw(entity, type) }
             .map(mapper::map)
+
+    override fun findById(id: String): Mono<LinkElement> {
+        return repository.findById(UUID.fromString(id))
+            .flatMap { this.findTypeAndMap(it) }
+    }
 }
