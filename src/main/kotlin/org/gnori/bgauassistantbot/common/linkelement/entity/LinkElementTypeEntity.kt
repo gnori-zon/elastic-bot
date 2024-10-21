@@ -1,11 +1,14 @@
 package org.gnori.bgauassistantbot.common.linkelement.entity
-
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.util.*
 
+@Entity
 @Table(name = "link_element_types")
 class LinkElementTypeEntity(
-    @Id val id: UUID,
-    val name: String
-)
+    @Id var id: UUID,
+    var name: String
+) {
+    constructor() : this(id = UUID.randomUUID(), name = "")
+}

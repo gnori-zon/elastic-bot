@@ -4,7 +4,6 @@
 CREATE FUNCTION only_one_without_parent() RETURNS trigger AS
 $only_one_without_parent$
 BEGIN
-    -- Проверить, что указаны имя сотрудника и зарплата
     IF NEW.parent_id IS NUll AND (SELECT count(*) > 0
                                   FROM phases
                                   WHERE parent_id IS NULL) THEN

@@ -1,7 +1,7 @@
 -- liquibase formatted sql
--- changeset gnori:V711907910_create_tg_user_table
+-- changeset gnori:V711907910_create_tg_users_table
 
-CREATE TABLE tg_user
+CREATE TABLE tg_users
 (
     id         UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     username       VARCHAR,

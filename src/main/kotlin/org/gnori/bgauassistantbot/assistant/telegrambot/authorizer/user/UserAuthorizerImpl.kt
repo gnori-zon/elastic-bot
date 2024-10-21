@@ -6,8 +6,6 @@ import org.gnori.bgauassistantbot.common.telegrambot.authorizer.user.UserAuthori
 import org.gnori.bgauassistantbot.common.user.model.User
 import org.gnori.bgauassistantbot.common.user.service.UserService
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Component
 class UserAuthorizerImpl(
@@ -15,12 +13,7 @@ class UserAuthorizerImpl(
     private val userAuthorizeParamToCreateUserMapper: UserAuthorizeParamToCreateUserParamMapper
 ) : UserAuthorizer<UserAuthorizeParam> {
 
-    override fun authorize(param: UserAuthorizeParam): Mono<User> =
+    override fun authorize(param: UserAuthorizeParam): User =
         userService.findByChatId(param.chatId)
-            .switchIfEmpty {
-                Mono.defer {
-                    userAuthorizeParamToCreateUserMapper.map(param)
-                        .let { userService.create(it) }
-                }
-            }
+            ?: userAuthorizeParamToCreateUserMapper.map(param).let { userService.create(it) }
 }

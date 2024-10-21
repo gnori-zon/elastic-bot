@@ -1,17 +1,15 @@
 package org.gnori.bgauassistantbot.common.phase.repository
 
 import org.gnori.bgauassistantbot.common.phase.entity.PhaseEntity
-import org.springframework.data.r2dbc.repository.Query
-import org.springframework.data.r2dbc.repository.R2dbcRepository
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.util.*
 
-interface PhaseEntityRepository : R2dbcRepository<PhaseEntity, UUID> {
+interface PhaseEntityRepository : JpaRepository<PhaseEntity, UUID> {
 
-    fun findByShortId(id: Int): Mono<PhaseEntity>
-    fun findByParentId(parentId: UUID): Flux<PhaseEntity>
-    fun findByParentIdIsNull(): Mono<PhaseEntity>
+    fun findByShortId(id: Int): PhaseEntity?
+    fun findByParentId(parentId: UUID): List<PhaseEntity>
+    fun findByParentIdIsNull(): PhaseEntity?
     @Query("""
         SELECT p_parent.*
         FROM phases p_parent
@@ -20,6 +18,8 @@ interface PhaseEntityRepository : R2dbcRepository<PhaseEntity, UUID> {
             FROM phases p_current
             WHERE p_current.short_id = :id
         )
-    """)
-    fun findByParentByShortId(id: Int): Mono<PhaseEntity>
+    """, nativeQuery = true)
+    fun findByParentByShortId(id: Int): PhaseEntity?
+    fun findByNameAndParentId(name: String, parentId: UUID): PhaseEntity?
+    fun deleteByShortId(shortId: Int): Boolean
 }

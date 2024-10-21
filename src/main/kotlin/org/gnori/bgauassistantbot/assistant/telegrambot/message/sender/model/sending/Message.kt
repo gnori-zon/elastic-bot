@@ -5,6 +5,7 @@ import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Media
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.ParseMode
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Text
+import org.gnori.bgauassistantbot.common.ext.plusIfPresent
 
 class Message(
     chatId: Long,
@@ -22,4 +23,5 @@ class Message(
     val visualMedia = VisualMediaGroup(chatId, photos, videos)
     val documentMedia = DocumentMediaGroup(chatId, documents)
     val textWithMedia = headerMedia?.let { TextWithMedia(chatId, this.text, it) }
+    val allFiles = documents.plus(videos).plus(photos).plusIfPresent(headerMedia?.file)
 }

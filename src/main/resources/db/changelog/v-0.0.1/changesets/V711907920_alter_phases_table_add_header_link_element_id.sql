@@ -7,7 +7,6 @@ ALTER TABLE phases
 CREATE FUNCTION not_url() RETURNS trigger AS
 $not_url$
 BEGIN
-    -- Проверить, что указаны имя сотрудника и зарплата
     IF 'url' ILIKE (SELECT let.name
                     FROM link_element_types let
                     WHERE let.id = (SELECT le.type_id

@@ -6,8 +6,6 @@ import org.gnori.bgauassistantbot.common.linkelement.mapper.LinkElementRawToLink
 import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
 import org.gnori.bgauassistantbot.common.linkelement.repository.LinkElementEntityRepository
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 import java.util.*
 
 @Component
@@ -17,17 +15,17 @@ class LinkElementServiceImpl(
     private val mapper: LinkElementRawToLinkElementMapper
 ) : LinkElementService {
 
-    override fun findByPhaseId(phaseId: String): Flux<LinkElement> =
+    override fun findByPhaseId(phaseId: String): List<LinkElement> =
         repository.findByPhaseId(UUID.fromString(phaseId))
-            .flatMap(this::findTypeAndMap)
+            .mapNotNull(this::findTypeAndMap)
 
-    private fun findTypeAndMap(entity: LinkElementEntity): Mono<LinkElement> =
-        linkElementTypeService.findById(entity.typeId.toString())
-            .map { type -> LinkElementRaw(entity, type) }
-            .map(mapper::map)
-
-    override fun findById(id: String): Mono<LinkElement> {
-        return repository.findById(UUID.fromString(id))
-            .flatMap { this.findTypeAndMap(it) }
+    override fun findById(id: String): LinkElement? {
+        return repository.findById(UUID.fromString(id)).orElse(null)
+            ?.let { this.findTypeAndMap(it) }
     }
+
+    private fun findTypeAndMap(entity: LinkElementEntity): LinkElement? =
+        linkElementTypeService.findById(entity.typeId.toString())
+            ?.let { type -> LinkElementRaw(entity, type) }
+            ?.let(mapper::map)
 }

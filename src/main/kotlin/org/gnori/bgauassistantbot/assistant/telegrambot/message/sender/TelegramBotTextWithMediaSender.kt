@@ -3,7 +3,7 @@ package org.gnori.bgauassistantbot.assistant.telegrambot.message.sender
 import dev.inmo.tgbotapi.extensions.api.send.media.sendDocument
 import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.media.sendVideo
-import kotlinx.coroutines.reactor.mono
+import kotlinx.coroutines.runBlocking
 import org.gnori.bgauassistantbot.assistant.telegrambot.AssistantTelegramBotData
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Document
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.Photo
@@ -13,7 +13,6 @@ import org.gnori.bgauassistantbot.common.ext.toChatId
 import org.gnori.bgauassistantbot.common.ext.toInmoParseMode
 import org.gnori.bgauassistantbot.common.telegrambot.message.sender.TelegramBotMessageSender
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
 
 @Component
 class TelegramBotTextWithMediaSender(
@@ -22,9 +21,9 @@ class TelegramBotTextWithMediaSender(
 
     private val telegramBot = botData.telegramBot
 
-    override fun send(params: TextWithMedia): Mono<Boolean> {
+    override fun send(params: TextWithMedia): Boolean {
 
-        return mono {
+        return runBlocking {
             when (params.media) {
                 is Document -> sendDocument(params)
                 is Photo -> sendPhoto(params)

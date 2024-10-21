@@ -6,7 +6,7 @@ import org.gnori.bgauassistantbot.common.user.model.User
 import org.gnori.bgauassistantbot.common.user.model.create.CreateUserParam
 import org.gnori.bgauassistantbot.common.user.repository.UserEntityRepository
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
+import java.util.*
 
 @Service
 class UserServiceImpl(
@@ -15,12 +15,16 @@ class UserServiceImpl(
     private val createUserToEntityMapper: CreateUserParamToEntityMapper
 ): UserService {
 
-    override fun findByChatId(chatId: Long): Mono<User> =
+    override fun findByChatId(chatId: Long): User? =
         repository.findByChatId(chatId)
-            .map(entityToModelMapper::map)
+            ?.let(entityToModelMapper::map)
 
-    override fun create(param: CreateUserParam): Mono<User> =
+    override fun findById(id: String): User? =
+        repository.findById(UUID.fromString(id)).orElse(null)
+            ?.let(entityToModelMapper::map)
+
+    override fun create(param: CreateUserParam): User =
         createUserToEntityMapper.map(param)
-            .let(repository::save)
-            .map(entityToModelMapper::map)
+            .let(repository::saveAndFlush)
+            .let(entityToModelMapper::map)
 }

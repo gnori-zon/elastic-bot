@@ -1,6 +1,5 @@
 package org.gnori.bgauassistantbot.assistant.telegrambot.message.preparer
 
-import dev.inmo.micro_utils.common.MPPFile
 import dev.inmo.tgbotapi.requests.abstracts.InputFile
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.CallbackDataInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.InlineKeyboardButton
@@ -8,97 +7,126 @@ import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.URLInlineKeyboardBu
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import dev.inmo.tgbotapi.utils.matrix
+import io.ktor.utils.io.streams.*
+import org.gnori.bgauassistantbot.assistant.telegrambot.file.loader.FileLoader
+import org.gnori.bgauassistantbot.assistant.telegrambot.message.callback.CallbackDataType
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.preparer.model.MessageRaw
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.*
 import org.gnori.bgauassistantbot.assistant.telegrambot.message.sender.model.sending.Message
+import org.gnori.bgauassistantbot.common.ext.plusIfPresent
 import org.gnori.bgauassistantbot.common.linkelement.model.LinkElement
 import org.gnori.bgauassistantbot.common.linkelement.model.LinkElementType
+import org.gnori.bgauassistantbot.common.named.query.service.NamedQueryService
+import org.gnori.bgauassistantbot.common.phase.action.model.PhaseAction
+import org.gnori.bgauassistantbot.common.phase.action.service.PhaseActionService
+import org.gnori.bgauassistantbot.common.phase.description.model.PhaseDescriptionType
 import org.gnori.bgauassistantbot.common.phase.model.Phase
 import org.gnori.bgauassistantbot.common.phase.service.PhaseService
 import org.gnori.bgauassistantbot.common.telegrambot.message.preparer.TelegramBotMessagePreparer
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
-import java.io.FileOutputStream
-import java.net.URI
-import java.nio.file.Files
+import java.io.ByteArrayInputStream
 
 
 @Component
 class AssistantTelegramBotMessagePreparer(
-    private val phaseService: PhaseService
+    private val phaseService: PhaseService,
+    private val actionService: PhaseActionService,
+    private val namedQueryService: NamedQueryService,
+    private val fileLoader: FileLoader
 ) : TelegramBotMessagePreparer<MessageRaw, Message> {
 
-    override fun prepare(param: MessageRaw): Mono<Message> {
+    override fun prepare(param: MessageRaw): Message {
 
-        return getPhase(param.phaseShortId)
-            .flatMap { phase ->
-                phaseService.findParentByShortId(phase.shortId)
-                    .map { it.shortId }
-                    .switchIfEmpty(Mono.defer { Mono.just(-1) })
-                    .map { notNullShortId ->
-                        val previousParentShortId = if (notNullShortId != -1) notNullShortId else null
-                        // todo: split to monos -> and parallel
-                        val headerMedia = createHeaderMedia(phase.headerLinkElement)
-                        val keyboardMarkup = createKeyboardMarkup(phase, previousParentShortId)
-                        val photos = createPhotos(phase.linkElements)
-                        val videos = createVideos(phase.linkElements)
-                        val documents = createDocuments(phase.linkElements)
+        val phase = doActionIfNeedAndGetPhaseId(param)
+            .let { redirectPhaseId -> getPhase(redirectPhaseId, param.descriptionType) }
 
-                        Message(
-                            param.chatId,
-                            phase.description,
-                            headerMedia,
-                            ParseMode.NULL,
-                            keyboardMarkup,
-                            photos,
-                            videos,
-                            documents
-                        )
-                    }
+        return phaseService.findParentByShortId(phase.shortId)
+            .let { parent ->
+                val fieldContext = mapOf("user_id" to param.user.id, "phase_id" to phase.id)
+                val keyboardMarkup = createKeyboardMarkup(phase, parent?.shortId, param.withBack, fieldContext)
+                val headerMedia = createHeaderMedia(phase.headerLinkElement)
+                val photos = createPhotos(phase.linkElements)
+                val videos = createVideos(phase.linkElements)
+                val documents = createDocuments(phase.linkElements)
+
+                Message(
+                    param.chatId,
+                    phase.description,
+                    headerMedia,
+                    ParseMode.of(phase.descriptionFormatType),
+                    keyboardMarkup,
+                    photos,
+                    videos,
+                    documents
+                )
             }
     }
 
+    private fun doActionIfNeedAndGetPhaseId(param: MessageRaw): Int? {
+
+        return if (CallbackDataType.ACTION == param.callbackDataType && param.callBackDataShortId != null) {
+            actionService.findByShortId(param.callBackDataShortId)
+                ?.let { action ->
+                    val fieldContext = mapOf(
+                        "user_id" to param.user.id,
+                        "phase_id" to action.fromPhaseId
+                    )
+                    namedQueryService.execute(action.actionNamedQuery, fieldContext)
+                    action.redirectPhaseShortId
+                }
+        } else {
+            param.callBackDataShortId
+        }
+    }
+
     // todo: move to other classes
-    private fun getPhase(phaseShortId: Int?): Mono<Phase> =
+    private fun getPhase(phaseShortId: Int?, descriptionType: PhaseDescriptionType): Phase =
         phaseShortId
-            ?.let(phaseService::findByShortId)
-            ?: phaseService.findFirstPhase()
+            ?.let { shortId -> phaseService.findByShortId(shortId, descriptionType) }
+            ?: phaseService.findFirstPhase(descriptionType)!! // todo: replace on warning
 
     private fun createHeaderMedia(headerLinkElement: LinkElement?): Media? {
 
         return headerLinkElement?.let {
-            loadBy(headerLinkElement.name, headerLinkElement.link)
+            fileLoader.loadBy(it.link)?.let { bytes ->
+                InputFile.fromInput(it.name, ByteArrayInputStream(bytes)::asInput)
+            }
         }?.let {
-            when(headerLinkElement.type) {
-                LinkElementType.PHOTO -> Photo(InputFile(it))
-                LinkElementType.VIDEO -> Video(InputFile(it))
-                LinkElementType.DOCUMENT -> Document(InputFile(it))
+            when (headerLinkElement.type) {
+                LinkElementType.PHOTO -> Photo(it)
+                LinkElementType.VIDEO -> Video(it)
+                LinkElementType.DOCUMENT -> Document(it)
                 else -> throw IllegalStateException("not supported type" + headerLinkElement.type)
             }
         }
     }
 
-    private fun createKeyboardMarkup(phase: Phase, parentShortId: Int?): KeyboardMarkup {
-        val nextPhaseInlineKeyboardButtons = createCallbackDataInlineKeyboardButtons(phase.childNamesWithShortIds)
-        val linkInlineKeyboardButtons = createUrlInlineKeyboardButtons(phase.linkElements)
-        val backButton = createBackCallbackDataInlineKeyboardButton(parentShortId)
+    private fun createKeyboardMarkup(
+        phase: Phase,
+        parentShortId: Int?,
+        withBack: Boolean,
+        fieldContext: Map<String, Any>,
+    ): KeyboardMarkup =
+        createCallbackDataInlineKeyboardButtons(phase.actions, fieldContext)
+            .let { actionButtons ->
+                val nextPhaseInlineKeyboardButtons = createCallbackDataInlineKeyboardButtons(phase.childNamesWithShortIds)
+                val linkInlineKeyboardButtons = createUrlInlineKeyboardButtons(phase.linkElements)
+                val backButton =
+                    if (withBack) {
+                        createBackCallbackDataInlineKeyboardButton(parentShortId)
+                    } else {
+                        null
+                    }
 
-        return nextPhaseInlineKeyboardButtons.plus(linkInlineKeyboardButtons)
-            .plusIfPresent(backButton)
-            .let { replyKeyboardMarkup(it) }
-    }
+                nextPhaseInlineKeyboardButtons.plus(linkInlineKeyboardButtons).plus(actionButtons)
+                    .plusIfPresent(backButton)
+                    .let { replyKeyboardMarkup(it) }
+            }
 
     private fun createBackCallbackDataInlineKeyboardButton(parentShortId: Int?): InlineKeyboardButton? {
         return parentShortId?.let {
-            CallbackDataInlineKeyboardButton(text = "back", callbackData = "$it")
+            CallbackDataInlineKeyboardButton(text = "Назад", callbackData = "$it;${CallbackDataType.PHASE}")
         }
-    }
-
-    fun <T> Collection<T>.plusIfPresent(element: T?): List<T> {
-        val result = ArrayList<T>(size + 1)
-        result.addAll(this)
-        element?.also { result.add(it) }
-        return result
     }
 
     private fun replyKeyboardMarkup(buttons: List<InlineKeyboardButton>): KeyboardMarkup {
@@ -109,8 +137,37 @@ class AssistantTelegramBotMessagePreparer(
         phaseNamesWithShortIds: List<Pair<String, Int>>
     ): List<InlineKeyboardButton> {
         return phaseNamesWithShortIds.map { (name, shortId) ->
-            CallbackDataInlineKeyboardButton(text = name, callbackData = shortId.toString())
+            CallbackDataInlineKeyboardButton(text = name, callbackData = "$shortId;${CallbackDataType.PHASE}")
         }
+    }
+
+    private fun createCallbackDataInlineKeyboardButtons(
+        actions: List<PhaseAction>,
+        fieldContext: Map<String, Any>
+    ): List<InlineKeyboardButton> {
+        return actions.mapNotNull { action ->
+                if (action.displayConditionNamedQuery == null) {
+                    action
+                } else {
+                    namedQueryService.execute(action.displayConditionNamedQuery!!, fieldContext)
+                        .let {
+                            val firstKey = it[0].keys.firstOrNull()
+                            firstKey?.let { key -> it[0][key] as? Boolean } ?: false
+                        }.let { isDisplay ->
+                            if (isDisplay) {
+                                action
+                            } else {
+                               null
+                            }
+                        }
+                }
+            }
+            .map { action ->
+                CallbackDataInlineKeyboardButton(
+                    text = action.name,
+                    callbackData = "${action.shortId};${CallbackDataType.ACTION}"
+                )
+            }
     }
 
     private fun createUrlInlineKeyboardButtons(linkElements: List<LinkElement>): List<InlineKeyboardButton> {
@@ -122,33 +179,29 @@ class AssistantTelegramBotMessagePreparer(
 
     private fun createPhotos(linkElements: List<LinkElement>): List<InputFile> {
         return linkElements.filterType(LinkElementType.PHOTO)
-            .mapNotNull { linkElement -> loadBy(linkElement.name, linkElement.link) }
-            .map { InputFile(it) }
+            .mapNotNull { linkElement ->
+                fileLoader.loadBy(linkElement.link)?.let {
+                    InputFile.fromInput(linkElement.name, ByteArrayInputStream(it)::asInput)
+                }
+            }
     }
 
     private fun createVideos(linkElements: List<LinkElement>): List<InputFile> {
         return linkElements.filterType(LinkElementType.VIDEO)
-            .mapNotNull { linkElement -> loadBy(linkElement.name, linkElement.link) }
-            .map { InputFile(it) }
+            .mapNotNull { linkElement ->
+                fileLoader.loadBy(linkElement.link)?.let {
+                    InputFile.fromInput(linkElement.name, ByteArrayInputStream(it)::asInput)
+                }
+            }
     }
 
     private fun createDocuments(linkElements: List<LinkElement>): List<InputFile> {
         return linkElements.filterType(LinkElementType.DOCUMENT)
-            .mapNotNull { linkElement -> loadBy(linkElement.name, linkElement.link) }
-            .map { InputFile(it) }
-    }
-
-    private fun loadBy(filename: String, fileLink: String): MPPFile? {
-        try {
-            val remoteFileBytes = URI(fileLink).toURL().readBytes()
-            val file = Files.createTempFile("", filename).toFile()
-            FileOutputStream(file).use { outputStream ->
-                outputStream.write(remoteFileBytes)
+            .mapNotNull { linkElement ->
+                fileLoader.loadBy(linkElement.link)?.let {
+                    InputFile.fromInput(linkElement.name, ByteArrayInputStream(it)::asInput)
+                }
             }
-            return file
-        } catch (ex: Exception) {
-            return null;
-        }
     }
 }
 

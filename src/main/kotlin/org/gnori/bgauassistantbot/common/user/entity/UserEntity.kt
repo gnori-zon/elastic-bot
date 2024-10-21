@@ -1,12 +1,16 @@
 package org.gnori.bgauassistantbot.common.user.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.util.*
 
-@Table(name = "tg_user")
+@Entity
+@Table(name = "tg_users")
 class UserEntity(
-    @Id val id: UUID? = null,
-    val username: String,
-    val chatId: Long
-)
+    @Id var id: UUID? = null,
+    var username: String,
+    var chatId: Long
+) {
+    constructor() : this(username = "", chatId = -1L)
+}

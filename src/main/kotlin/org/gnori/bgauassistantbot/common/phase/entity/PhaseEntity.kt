@@ -1,15 +1,18 @@
 package org.gnori.bgauassistantbot.common.phase.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.util.*
 
+@Entity
 @Table(name = "phases")
 class PhaseEntity(
-    @Id val id: UUID,
-    val name: String,
-    val headerLinkElementId: UUID?,
-    val description: String,
-    val shortId: Int,
-    val parentId: UUID?
-)
+    @Id var id: UUID? = null,
+    var name: String,
+    var headerLinkElementId: UUID? = null,
+    var shortId: Int? = null,
+    var parentId: UUID? = null
+) {
+    constructor() : this(name = "")
+}
