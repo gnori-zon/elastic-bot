@@ -1,1 +1,1 @@
-# bgau-assistant-bot
+# elastic-bot

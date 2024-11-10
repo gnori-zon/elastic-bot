@@ -1,1 +1,1 @@
-rootProject.name = "bgau-assistant-bot"
+rootProject.name = "elastic-bot"

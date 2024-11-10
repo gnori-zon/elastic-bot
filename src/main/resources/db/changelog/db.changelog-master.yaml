@@ -5,4 +5,3 @@ databaseChangeLog:
   - include:
       file: v-0.0.2/changelog-v-0.0.2-cumulative.yaml
       relativeToChangelogFile: true
-      relativeToChangelogFile: true

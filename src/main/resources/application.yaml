@@ -1,18 +1,18 @@
 spring:
   application:
-    name: bgau-assistant-bot
+    name: elastic-bot
 
-  r2dbc:
-    url: r2dbc:postgresql://<url>
-    username: <username>
-    password: <password>
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bgau_assistant_bot
+    username: bunker
+    password: bunker
 
   liquibase:
     enabled: true
-    url: jdbc:postgresql://<url>
-    user: <user>
-    password: <password>
+    url: jdbc:postgresql://localhost:5432/bgau_assistant_bot
+    user: bunker
+    password: bunker
 
-telegram:
-  assistant:
-    token: <token>
+bots:
+  telegram:
+    token: 6400904135:AAH_j-D2lWY3QlJGDqU7d_A9N1O57gCcpUg
