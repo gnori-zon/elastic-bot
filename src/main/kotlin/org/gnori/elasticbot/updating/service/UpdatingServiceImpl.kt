@@ -1,6 +1,6 @@
 package org.gnori.elasticbot.updating.service
 
-import org.gnori.elasticbot.common.phase.service.PhaseService
+import org.gnori.elasticbot.common.phase.service.FlowNodeService
 import org.gnori.elasticbot.updating.model.Updating
 import org.gnori.elasticbot.updating.model.UpdatingImpl
 import org.gnori.elasticbot.updating.model.UpdatingType
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 @Component
 class UpdatingServiceImpl(
     private val repository: UpdatingEntityRepository,
-    private val phaseService: PhaseService
+    private val phaseService: FlowNodeService
 ) : UpdatingService {
 
     override fun findByType(type: UpdatingType): List<Updating> =

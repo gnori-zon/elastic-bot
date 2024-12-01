@@ -1,6 +1,6 @@
 package org.gnori.elasticbot.common.phase.user.subscription.service
 
-import org.gnori.elasticbot.common.phase.service.PhaseService
+import org.gnori.elasticbot.common.phase.service.FlowNodeService
 import org.gnori.elasticbot.common.phase.user.subscription.model.PhaseUserSubscription
 import org.gnori.elasticbot.common.phase.user.subscription.model.PhaseUserSubscriptionImpl
 import org.gnori.elasticbot.common.phase.user.subscription.repository.PhaseUserSubscriptionEntityRepository
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 @Component
 class PhaseUserSubscriptionServiceImpl(
     private val repository: PhaseUserSubscriptionEntityRepository,
-    private val phaseService: PhaseService,
+    private val phaseService: FlowNodeService,
     private val userService: UserService
 ) : PhaseUserSubscriptionService {
 

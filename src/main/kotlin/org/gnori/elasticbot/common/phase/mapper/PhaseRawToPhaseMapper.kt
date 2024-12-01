@@ -1,15 +1,15 @@
 package org.gnori.elasticbot.common.phase.mapper
 
 import org.gnori.elasticbot.common.mapper.Mapper
-import org.gnori.elasticbot.common.phase.model.Phase
-import org.gnori.elasticbot.common.phase.model.PhaseImpl
+import org.gnori.elasticbot.common.phase.model.FlowNode
+import org.gnori.elasticbot.common.phase.model.FlowNodeImpl
 import org.springframework.stereotype.Component
 
 @Component
-class PhaseRawToPhaseMapper : Mapper<PhaseRaw, Phase> {
+class PhaseRawToPhaseMapper : Mapper<PhaseRaw, FlowNode> {
 
-    override fun map(param: PhaseRaw): Phase =
-        PhaseImpl(
+    override fun map(param: PhaseRaw): FlowNode =
+        FlowNodeImpl(
             id = param.entity.id.toString(),
             name = param.entity.name,
             headerLinkElement = param.headerLinkElement,

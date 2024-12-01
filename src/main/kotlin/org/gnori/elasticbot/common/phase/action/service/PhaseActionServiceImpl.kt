@@ -6,14 +6,14 @@ import org.gnori.elasticbot.common.phase.action.model.CreatePhaseAction
 import org.gnori.elasticbot.common.phase.action.model.PhaseAction
 import org.gnori.elasticbot.common.phase.action.model.PhaseActionImpl
 import org.gnori.elasticbot.common.phase.action.repository.PhaseActionEntityRepository
-import org.gnori.elasticbot.common.phase.repository.PhaseEntityRepository
+import org.gnori.elasticbot.common.phase.repository.FlowNodeEntityRepository
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
 class PhaseActionServiceImpl(
     private val repository: PhaseActionEntityRepository,
-    private val phaseRepository: PhaseEntityRepository,
+    private val phaseRepository: FlowNodeEntityRepository,
     private val namedQueryService: NamedQueryService
 ) : PhaseActionService {
     override fun findById(id: String): PhaseAction? =

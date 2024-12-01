@@ -6,9 +6,9 @@ $only_one_start$
 BEGIN
     IF NEW.is_start IS TRUE AND (SELECT count(*) > 0
                                   FROM flow_nodes
-                                  WHERE is_start IS TRUE) THEN
+                                  WHERE parent_id IS NULL) THEN
 
-        RAISE EXCEPTION 'only one phase can have no parent element.';
+        RAISE EXCEPTION 'only one flow node can have no parent element.';
     END IF;
     RETURN NEW;
 END;
