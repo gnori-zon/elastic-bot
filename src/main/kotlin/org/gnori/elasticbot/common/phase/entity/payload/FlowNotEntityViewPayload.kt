@@ -2,7 +2,7 @@ package org.gnori.elasticbot.common.phase.entity.payload
 
 import java.util.UUID
 
-class ViewPayload(
+class FlowNotEntityViewPayload(
     var flowNodeContentId: UUID? = null
 ) : FlowNodeEntityPayload {
 

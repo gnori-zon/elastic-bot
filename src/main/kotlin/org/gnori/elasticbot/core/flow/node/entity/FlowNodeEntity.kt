@@ -13,7 +13,6 @@ import java.util.UUID
 class FlowNodeEntity(
     @Id
     val id: UUID? = null,
-    val name: String? = null,
     val parentId: UUID? = null,
     @JdbcTypeCode(SqlTypes.JSON)
     val payload: FlowNodeEntityPayload? = null,

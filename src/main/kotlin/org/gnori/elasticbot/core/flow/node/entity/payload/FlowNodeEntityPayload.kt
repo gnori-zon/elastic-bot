@@ -3,7 +3,7 @@ package org.gnori.elasticbot.core.flow.node.entity.payload
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import org.gnori.elasticbot.common.phase.entity.payload.ViewPayload
+import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -12,7 +12,7 @@ import org.gnori.elasticbot.common.phase.entity.payload.ViewPayload
 )
 @JsonSubTypes(
     Type(
-        value = ViewPayload::class,
+        value = FlowNotEntityViewPayload::class,
         name = "view"
     )
 )
