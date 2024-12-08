@@ -23,6 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("io.arrow-kt:arrow-core:2.0.0")
     implementation("com.fleeksoft.ksoup:ksoup:0.1.2")
     implementation("io.github.reactivecircus.cache4k:cache4k:0.13.0")
 
