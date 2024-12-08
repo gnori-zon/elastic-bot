@@ -1,6 +1,6 @@
-package org.gnori.elasticbot.core.flow.node.model
+package org.gnori.elasticbot.domain.flow.node.model
 
-import org.gnori.elasticbot.core.flow.node.model.payload.FlowNodePayload
+import org.gnori.elasticbot.domain.flow.node.model.payload.FlowNodePayload
 import java.time.LocalDateTime
 
 class FlowNode(

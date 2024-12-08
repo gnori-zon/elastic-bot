@@ -1,4 +1,4 @@
-package org.gnori.elasticbot.core.flow.node.model.payload
+package org.gnori.elasticbot.domain.flow.node.model.payload
 
 interface FlowNodePayload {
     val type: FlowNodePayloadType

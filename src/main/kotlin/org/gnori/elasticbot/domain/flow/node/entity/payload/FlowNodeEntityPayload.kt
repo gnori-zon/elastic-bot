@@ -1,4 +1,4 @@
-package org.gnori.elasticbot.core.flow.node.entity.payload
+package org.gnori.elasticbot.domain.flow.node.entity.payload
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
@@ -7,7 +7,7 @@ import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
     property = "type"
 )
 @JsonSubTypes(

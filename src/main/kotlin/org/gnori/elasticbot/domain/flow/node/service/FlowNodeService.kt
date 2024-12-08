@@ -1,8 +1,8 @@
-package org.gnori.elasticbot.core.flow.node.service
+package org.gnori.elasticbot.domain.flow.node.service
 
-import org.gnori.elasticbot.core.flow.node.model.FlowNode
-import org.gnori.elasticbot.core.flow.node.model.mapper.from
-import org.gnori.elasticbot.core.flow.node.repository.FlowNodeEntityRepository
+import org.gnori.elasticbot.domain.flow.node.model.FlowNode
+import org.gnori.elasticbot.domain.flow.node.model.mapper.from
+import org.gnori.elasticbot.domain.flow.node.repository.FlowNodeEntityRepository
 import org.springframework.stereotype.Component
 import java.util.UUID
 
