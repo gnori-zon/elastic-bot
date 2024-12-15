@@ -13,7 +13,7 @@ import java.util.UUID
 class TextContentEntity(
     @Id
     val id: UUID? = null,
-    val format: UUID? = null,
+    val format: TextContentEntityFormatType? = null,
     @JdbcTypeCode(SqlTypes.JSON)
     val payload: TextContentEntityPayload? = null,
     val createdAt: Long? = null,

@@ -1,10 +1,10 @@
-package org.gnori.elasticbot.domain.flow.node.entity.payload
+package org.gnori.elasticbot.domain.chat.telegram.entity.payload
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
+import org.gnori.elasticbot.domain.chat.telegram.entity.payload.impl.TelegramUserChatEntityPayload
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -13,26 +13,26 @@ import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
 )
 @JsonSubTypes(
     Type(
-        value = FlowNotEntityViewPayload::class,
+        value = TelegramUserChatEntityPayload::class,
         name = "view"
     )
 )
-interface FlowNodeEntityPayload {
-    val type: FlowNodeEntityPayloadType
+interface TelegramChatEntityPayload {
+    val type: TelegramChatEntityPayloadType
 }
 
-enum class  FlowNodeEntityPayloadType(
+enum class  TelegramChatEntityPayloadType(
     val value: String
 ) {
-    VIEW("view");
-    
+    USER("user");
+
     companion object {
 
         private val caseByValue =
-            entries.associateBy(FlowNodeEntityPayloadType::value)
+            entries.associateBy(TelegramChatEntityPayloadType::value)
 
         @JsonCreator
-        fun from(value: String): FlowNodeEntityPayloadType? {
+        fun from(value: String): TelegramChatEntityPayloadType? {
             return caseByValue[value]
         }
     }
