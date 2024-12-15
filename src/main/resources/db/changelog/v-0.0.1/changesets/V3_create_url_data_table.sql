@@ -1,10 +1,11 @@
 -- liquibase formatted sql
--- changeset gnori:V11_create_named_queries_table
+-- changeset gnori:V3_create_url_data_table
 
-CREATE TABLE named_query_types
+CREATE TABLE url_data
 (
     id         UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    name       VARCHAR(200) UNIQUE      NOT NULL,
+    url        VARCHAR                  NOT NULL,
+    type       VARCHAR                  NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE
 )

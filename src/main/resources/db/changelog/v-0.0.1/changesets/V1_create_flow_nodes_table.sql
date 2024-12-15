@@ -4,9 +4,8 @@
 CREATE TABLE flow_nodes
 (
     id         UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    name       VARCHAR(256)             NOT NULL,
+    parent_id  UUID references flow_nodes (id),
     payload    JSONB                    NOT NULL,
-    parent_id  UUID,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE
 )

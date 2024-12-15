@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset splitStatements:false gnori:V3_alter_flow_nodes_table_add_trigger_only_one_start
+-- changeset splitStatements:false gnori:V2_alter_flow_nodes_table_add_trigger_only_one_start
 
 CREATE FUNCTION only_one_start() RETURNS trigger AS
 $only_one_start$

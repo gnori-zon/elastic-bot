@@ -1,10 +1,11 @@
 -- liquibase formatted sql
--- changeset gnori:V9_create_named_query_input_param_types_table
+-- changeset gnori:V8_create_telegram_chats_table
 
-CREATE TABLE named_query_input_param_types
+CREATE TABLE telegram_chats
 (
     id         UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    name       VARCHAR(200)             NOT NULL UNIQUE,
+    externalId BIGINT                   NOT NULL,
+    payload    JSONB                    NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE
 )
