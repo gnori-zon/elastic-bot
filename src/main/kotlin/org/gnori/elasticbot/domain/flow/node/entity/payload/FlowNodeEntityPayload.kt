@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
+import org.gnori.elasticbot.domain.flow.node.entity.payload.impl.FlowNodeEntityViewPayload
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -13,7 +13,7 @@ import org.gnori.elasticbot.common.phase.entity.payload.FlowNotEntityViewPayload
 )
 @JsonSubTypes(
     Type(
-        value = FlowNotEntityViewPayload::class,
+        value = FlowNodeEntityViewPayload::class,
         name = "view"
     )
 )
